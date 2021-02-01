@@ -58,6 +58,7 @@ public class TransactionManagerImpl implements TransactionManager, CompensableBe
 		if (transaction != null) {
 			compensableManager.begin();
 		} else if (invocation != null) {
+			//开启分布式事务
 			compensableManager.compensableBegin();
 		} else {
 			transactionManager.begin();

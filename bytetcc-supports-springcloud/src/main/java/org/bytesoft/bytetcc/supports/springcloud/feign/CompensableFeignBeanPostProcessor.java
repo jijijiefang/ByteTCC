@@ -44,6 +44,13 @@ public class CompensableFeignBeanPostProcessor implements BeanPostProcessor, Ini
 		return bean;
 	}
 
+	/**
+	 * 初始化以后对所有FeignClient创建Feign动态代理对象
+	 * @param bean
+	 * @param beanName
+	 * @return
+	 * @throws BeansException
+	 */
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 		if (Proxy.isProxyClass(bean.getClass()) == false) {
 			return bean;
@@ -97,6 +104,11 @@ public class CompensableFeignBeanPostProcessor implements BeanPostProcessor, Ini
 		return bean;
 	}
 
+	/**
+	 * 创建FeignClient的动态代理对象
+	 * @param origin
+	 * @return 动态代理对象
+	 */
 	private Object createProxiedObject(Object origin) {
 		InvocationHandler handler = Proxy.getInvocationHandler(origin);
 

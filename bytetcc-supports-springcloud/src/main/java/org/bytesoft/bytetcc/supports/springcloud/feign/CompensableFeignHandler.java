@@ -33,6 +33,9 @@ import org.slf4j.LoggerFactory;
 
 import com.netflix.loadbalancer.Server;
 
+/**
+ * byteTcc实现的FeignClient的Feign代理类
+ */
 public class CompensableFeignHandler implements InvocationHandler {
 	static final Logger logger = LoggerFactory.getLogger(CompensableFeignHandler.class);
 
