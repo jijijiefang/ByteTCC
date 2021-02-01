@@ -281,9 +281,9 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 				this.desociateThread();
 			}
 		}
-
+		//全局Xid-分布式事务放入内存的map中
 		compensableRepository.putTransaction(compensableXid, compensable);
-
+		//日志处理
 		compensableLogger.createTransaction(compensable.getTransactionArchive());
 		boolean locked = compensableLock.lockTransaction(compensableXid, this.endpoint);
 		if (locked == false) {
