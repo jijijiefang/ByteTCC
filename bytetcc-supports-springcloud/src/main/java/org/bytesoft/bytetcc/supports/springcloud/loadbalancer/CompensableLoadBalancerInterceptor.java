@@ -31,6 +31,9 @@ import com.netflix.loadbalancer.Server;
 import com.netflix.loadbalancer.Server.MetaInfo;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
 
+/**
+ * 分布式事务负载均衡拦截器
+ */
 public abstract class CompensableLoadBalancerInterceptor {
 	private final boolean stateful;
 
@@ -42,6 +45,11 @@ public abstract class CompensableLoadBalancerInterceptor {
 		this.stateful = stateful;
 	}
 
+	/**
+	 * 从服务实例列表中筛选分支事务相关的服务实例返回
+	 * @param servers
+	 * @return
+	 */
 	public List<Server> beforeCompletion(List<Server> servers) {
 		SpringCloudBeanRegistry beanRegistry = SpringCloudBeanRegistry.getInstance();
 		CompensableBeanFactory beanFactory = beanRegistry.getBeanFactory();

@@ -31,6 +31,12 @@ public class CompensableRuleImpl implements CompensableRule {
 		this.clientConfig = clientConfig;
 	}
 
+	/**
+	 * 随机选择服务实例
+	 * @param key
+	 * @param serverList
+	 * @return
+	 */
 	public Server chooseServer(Object key, List<Server> serverList) {
 		if (serverList == null || serverList.isEmpty()) {
 			return null;

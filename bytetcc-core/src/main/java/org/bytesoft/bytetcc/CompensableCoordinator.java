@@ -153,6 +153,12 @@ public class CompensableCoordinator implements RemoteCoordinator, CompensableBea
 		throw new XAException(XAException.XAER_RMERR);
 	}
 
+	/**
+	 * 分支事务提交
+	 * @param xid
+	 * @param onePhase
+	 * @throws XAException
+	 */
 	public void commit(Xid xid, boolean onePhase) throws XAException {
 		this.checkParticipantReadyIfNecessary();
 
@@ -205,6 +211,13 @@ public class CompensableCoordinator implements RemoteCoordinator, CompensableBea
 		}
 	}
 
+	/**
+	 * 分支事务提交操作
+	 * @param xid
+	 * @param onePhase
+	 * @return
+	 * @throws XAException
+	 */
 	private CompensableTransaction invokeCommit(Xid xid, boolean onePhase) throws XAException {
 		TransactionRepository compensableRepository = this.beanFactory.getCompensableRepository();
 		XidFactory xidFactory = this.beanFactory.getCompensableXidFactory();

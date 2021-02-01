@@ -31,6 +31,9 @@ import com.netflix.loadbalancer.ILoadBalancer;
 import com.netflix.loadbalancer.IRule;
 import com.netflix.loadbalancer.Server;
 
+/**
+ * 分布式事务负载均衡算法IRule实现类
+ */
 public class CompensableLoadBalancerRuleImpl extends AbstractLoadBalancerRule implements IRule {
 	static final String CONSTANT_RULE_KEY = "org.bytesoft.bytetcc.NFCompensableRuleClassName";
 	static Logger logger = LoggerFactory.getLogger(CompensableLoadBalancerRuleImpl.class);
@@ -39,6 +42,11 @@ public class CompensableLoadBalancerRuleImpl extends AbstractLoadBalancerRule im
 
 	private IClientConfig clientConfig;
 
+	/**
+	 * 根据负载均衡算法选择一个服务实例
+	 * @param key
+	 * @return
+	 */
 	public Server choose(Object key) {
 		SpringCloudBeanRegistry registry = SpringCloudBeanRegistry.getInstance();
 		CompensableLoadBalancerInterceptor interceptor = registry.getLoadBalancerInterceptor();
