@@ -28,6 +28,10 @@ public interface CompensableManager extends TransactionManager {
 
 	public CompensableTransaction getCompensableTransaction(Thread thread);
 
+	/**
+	 * 根据当前线程从map中获取分布式事务
+	 * @return CompensableTransaction
+	 */
 	public CompensableTransaction getCompensableTransactionQuietly();
 
 	public void attachThread(Transaction transaction);

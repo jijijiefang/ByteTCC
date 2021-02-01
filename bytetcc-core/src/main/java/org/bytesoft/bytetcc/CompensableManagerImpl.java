@@ -110,7 +110,10 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 		CompensableTransaction transaction = this.getCompensableTransactionQuietly();
 		return transaction == null ? null : transaction.getTransaction();
 	}
-
+	/**
+	 * 根据当前线程从map中获取分布式事务
+	 * @return CompensableTransaction
+	 */
 	public CompensableTransaction getCompensableTransactionQuietly() {
 		return (CompensableTransaction) this.thread2txMap.get(Thread.currentThread());
 	}
@@ -229,6 +232,11 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 		}
 	}
 
+	/**
+	 * 开启TCC分布式事务
+	 * @throws NotSupportedException
+	 * @throws SystemException
+	 */
 	public void compensableBegin() throws NotSupportedException, SystemException {
 		if (this.getCompensableTransactionQuietly() != null) {
 			throw new NotSupportedException();
@@ -241,19 +249,21 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 
 		XidFactory transactionXidFactory = this.beanFactory.getTransactionXidFactory();
 		XidFactory compensableXidFactory = this.beanFactory.getCompensableXidFactory();
-
+		//分布式事务全局Xid
 		TransactionXid compensableXid = compensableXidFactory.createGlobalXid();
+		//根据全局Xid生成事务Xid
 		TransactionXid transactionXid = transactionXidFactory.createGlobalXid(compensableXid.getGlobalTransactionId());
-
+		//分布式事务上下文
 		TransactionContext compensableContext = new TransactionContext();
 		compensableContext.setCoordinator(true);
 		compensableContext.setCompensable(true);
 		compensableContext.setStatefully(this.statefully);
 		compensableContext.setXid(compensableXid);
 		compensableContext.setPropagatedBy(compensableCoordinator.getIdentifier());
+		//分布式事务对象
 		CompensableTransactionImpl compensable = new CompensableTransactionImpl(compensableContext);
 		compensable.setBeanFactory(this.beanFactory);
-
+		//将分布式事务分别放入线程-分布式事务map和全局Xid-分布式事务map
 		this.associateThread(compensable);
 		logger.info("{}| compensable transaction begin!", ByteUtils.byteArrayToString(compensableXid.getGlobalTransactionId()));
 

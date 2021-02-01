@@ -70,6 +70,9 @@ import org.bytesoft.transaction.xa.XidFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 可补偿的TCC分布式事务实现类
+ */
 public class CompensableTransactionImpl extends TransactionListenerAdapter
 		implements CompensableTransaction, CompensableRolledbackMarker {
 	static final Logger logger = LoggerFactory.getLogger(CompensableTransactionImpl.class);

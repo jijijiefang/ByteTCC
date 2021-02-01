@@ -44,7 +44,7 @@ public class TransactionManagerImpl implements TransactionManager, CompensableBe
 	public void begin() throws NotSupportedException, SystemException {
 		TransactionManager transactionManager = this.beanFactory.getTransactionManager();
 		CompensableManager compensableManager = this.beanFactory.getCompensableManager();
-
+		//根据当前线程从map中获取分布式事务
 		CompensableTransaction transaction = compensableManager.getCompensableTransactionQuietly();
 		boolean markedRollbackOnly = transaction == null ? false : transaction.isMarkedRollbackOnly();
 
@@ -54,7 +54,7 @@ public class TransactionManagerImpl implements TransactionManager, CompensableBe
 
 		CompensableInvocationRegistry registry = CompensableInvocationRegistry.getInstance();
 		CompensableInvocation invocation = registry.getCurrent();
-
+		//分布式事务对象不是null，已经开启分布式事务
 		if (transaction != null) {
 			compensableManager.begin();
 		} else if (invocation != null) {

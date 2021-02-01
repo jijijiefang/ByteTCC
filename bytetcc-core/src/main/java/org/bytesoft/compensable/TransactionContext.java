@@ -17,6 +17,9 @@ package org.bytesoft.compensable;
 
 import org.bytesoft.bytejta.supports.jdbc.LocalXACompatible;
 
+/**
+ * 分布式事务上下文
+ */
 public class TransactionContext extends org.bytesoft.transaction.TransactionContext implements LocalXACompatible {
 	private static final long serialVersionUID = 1L;
 
