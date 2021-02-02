@@ -35,12 +35,20 @@ import org.bytesoft.transaction.TransactionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 事务管理器
+ */
 public class TransactionManagerImpl implements TransactionManager, CompensableBeanFactoryAware {
 	static final Logger logger = LoggerFactory.getLogger(TransactionManagerImpl.class);
 
 	@javax.inject.Inject
 	private CompensableBeanFactory beanFactory;
 
+	/**
+	 * 开启事务
+	 * @throws NotSupportedException
+	 * @throws SystemException
+	 */
 	public void begin() throws NotSupportedException, SystemException {
 		TransactionManager transactionManager = this.beanFactory.getTransactionManager();
 		CompensableManager compensableManager = this.beanFactory.getCompensableManager();
@@ -65,6 +73,15 @@ public class TransactionManagerImpl implements TransactionManager, CompensableBe
 		}
 	}
 
+	/**
+	 * 提交事务
+	 * @throws RollbackException
+	 * @throws HeuristicMixedException
+	 * @throws HeuristicRollbackException
+	 * @throws SecurityException
+	 * @throws IllegalStateException
+	 * @throws SystemException
+	 */
 	public void commit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException,
 			SecurityException, IllegalStateException, SystemException {
 		TransactionManager transactionManager = this.beanFactory.getTransactionManager();
@@ -111,6 +128,12 @@ public class TransactionManagerImpl implements TransactionManager, CompensableBe
 
 	}
 
+	/**
+	 * 回滚事务
+	 * @throws IllegalStateException
+	 * @throws SecurityException
+	 * @throws SystemException
+	 */
 	public void rollback() throws IllegalStateException, SecurityException, SystemException {
 		TransactionManager transactionManager = this.beanFactory.getTransactionManager();
 		CompensableManager compensableManager = this.beanFactory.getCompensableManager();

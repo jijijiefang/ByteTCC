@@ -56,6 +56,11 @@ public class CompensableMethodInterceptor
 	private CompensableBeanFactory beanFactory;
 	private ApplicationContext applicationContext;
 
+	/**
+	 * begin后处理
+	 * @param transaction
+	 * @param createFlag
+	 */
 	public void afterBegin(Transaction transaction, boolean createFlag) {
 		CompensableManager compensableManager = this.beanFactory.getCompensableManager();
 		CompensableInvocationRegistry registry = CompensableInvocationRegistry.getInstance();

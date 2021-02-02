@@ -23,6 +23,9 @@ import org.bytesoft.compensable.CompensableManager;
 import org.bytesoft.compensable.CompensableTransaction;
 import org.bytesoft.compensable.aware.CompensableBeanFactoryAware;
 
+/**
+ * 事务上下文实现类
+ */
 public class CompensableContextImpl implements CompensableContext, CompensableBeanFactoryAware {
 	@javax.inject.Inject
 	private CompensableBeanFactory beanFactory;

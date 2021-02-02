@@ -50,6 +50,9 @@ import org.bytesoft.transaction.xa.XidFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 补偿事务管理器
+ */
 public class CompensableManagerImpl implements CompensableManager, CompensableBeanFactoryAware, CompensableEndpointAware {
 	static final Logger logger = LoggerFactory.getLogger(CompensableManagerImpl.class);
 
@@ -61,6 +64,10 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 	private final Map<Thread, Transaction> thread2txMap = new ConcurrentHashMap<Thread, Transaction>();
 	private final Map<Xid, Transaction> xid2txMap = new ConcurrentHashMap<Xid, Transaction>();
 
+	/**
+	 * Xid-事务,当前线程-事务放入map
+	 * @param transaction
+	 */
 	public void associateThread(Transaction transaction) {
 		TransactionContext transactionContext = (TransactionContext) transaction.getTransactionContext();
 		TransactionXid transactionXid = transactionContext.getXid();
@@ -68,6 +75,10 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 		this.thread2txMap.put(Thread.currentThread(), (CompensableTransaction) transaction);
 	}
 
+	/**
+	 * map中移除Xid-事务,当前线程-事务
+	 * @return
+	 */
 	public CompensableTransaction desociateThread() {
 		CompensableTransaction transaction = (CompensableTransaction) this.thread2txMap.remove(Thread.currentThread());
 		if (transaction == null) {

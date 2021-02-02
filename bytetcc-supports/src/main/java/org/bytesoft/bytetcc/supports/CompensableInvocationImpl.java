@@ -20,6 +20,9 @@ import java.lang.reflect.Method;
 
 import org.bytesoft.compensable.CompensableInvocation;
 
+/**
+ * 分布式事务操作
+ */
 public class CompensableInvocationImpl implements CompensableInvocation {
 
 	private String declaringClass;

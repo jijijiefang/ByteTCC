@@ -801,6 +801,10 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter
 	public void suspend() throws SystemException {
 	}
 
+	/**
+	 * 分支事务加入分布式事务
+	 * @param invocation 分支事务
+	 */
 	public synchronized void registerCompensable(CompensableInvocation invocation) {
 		XidFactory transactionXidFactory = this.beanFactory.getTransactionXidFactory();
 		CompensableLogger compensableLogger = this.beanFactory.getCompensableLogger();
