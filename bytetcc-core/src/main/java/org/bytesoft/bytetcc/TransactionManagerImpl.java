@@ -117,6 +117,7 @@ public class TransactionManagerImpl implements TransactionManager, CompensableBe
 				} else if (compensableContext.getPropagationLevel() > 0) {
 					compensableManager.commit();
 				} else {
+					//分布式事务提交
 					compensableManager.compensableCommit();
 				}
 			} else {

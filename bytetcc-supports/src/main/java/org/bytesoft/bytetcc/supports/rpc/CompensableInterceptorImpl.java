@@ -39,12 +39,20 @@ import org.bytesoft.transaction.xa.XidFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * TCC事务拦截器
+ */
 public class CompensableInterceptorImpl implements TransactionInterceptor, CompensableBeanFactoryAware {
 	static final Logger logger = LoggerFactory.getLogger(CompensableInterceptorImpl.class);
 
 	@javax.inject.Inject
 	private CompensableBeanFactory beanFactory;
 
+	/**
+	 * 发送请求前操作
+	 * @param request
+	 * @throws IllegalStateException
+	 */
 	public void beforeSendRequest(TransactionRequest request) throws IllegalStateException {
 		CompensableManager compensableManager = this.beanFactory.getCompensableManager();
 		XidFactory xidFactory = this.beanFactory.getCompensableXidFactory();
@@ -70,7 +78,7 @@ public class CompensableInterceptorImpl implements TransactionInterceptor, Compe
 			RemoteResourceDescriptor descriptor = new RemoteResourceDescriptor();
 			descriptor.setDelegate(resource);
 			descriptor.setIdentifier(resource.getIdentifier());
-
+			//
 			boolean participantEnlisted = transaction.enlistResource(descriptor);
 			((TransactionRequestImpl) request).setParticipantEnlistFlag(participantEnlisted);
 		} catch (IllegalStateException ex) {

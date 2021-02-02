@@ -28,11 +28,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+/**
+ * 从Spring容器中获取代理类，调用代理类的方法
+ */
 public class SpringContainerContextImpl implements ContainerContext, ApplicationContextAware {
 	static Logger logger = LoggerFactory.getLogger(SpringContainerContextImpl.class);
 
 	private ApplicationContext applicationContext;
 
+	/**
+	 * 分支事务提交
+	 * @param invocation
+	 * @throws RuntimeException
+	 */
 	public void confirm(CompensableInvocation invocation) throws RuntimeException {
 		String identifier = (String) invocation.getIdentifier();
 		String confirmableKey = invocation.getConfirmableKey();
@@ -44,6 +52,7 @@ public class SpringContainerContextImpl implements ContainerContext, Application
 			this.confirmSimplified(method, instance, args);
 		} else {
 			Object instance = this.applicationContext.getBean(confirmableKey);
+			//调用comfirm方法
 			this.confirmComplicated(method, instance, args);
 		}
 	}

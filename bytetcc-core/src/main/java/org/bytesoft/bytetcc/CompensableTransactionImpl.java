@@ -134,6 +134,15 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter
 
 	}
 
+	/**
+	 * 事务提交
+	 * @throws RollbackException
+	 * @throws HeuristicMixedException
+	 * @throws HeuristicRollbackException
+	 * @throws SecurityException
+	 * @throws IllegalStateException
+	 * @throws SystemException
+	 */
 	public synchronized void commit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException,
 			SecurityException, IllegalStateException, SystemException {
 
@@ -152,6 +161,15 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter
 
 	}
 
+	/**
+	 * 事务提交操作
+	 * @throws RollbackException
+	 * @throws HeuristicMixedException
+	 * @throws HeuristicRollbackException
+	 * @throws SecurityException
+	 * @throws IllegalStateException
+	 * @throws SystemException
+	 */
 	private void fireCommit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException, SecurityException,
 			IllegalStateException, SystemException {
 		CompensableLogger compensableLogger = this.beanFactory.getCompensableLogger();
@@ -242,6 +260,10 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter
 
 	}
 
+	/**
+	 * 分支事务提交操作-调用comfirm方法
+	 * @throws SystemException
+	 */
 	private void fireNativeParticipantConfirm() throws SystemException {
 		boolean errorExists = false;
 
@@ -263,6 +285,7 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter
 							ByteUtils.byteArrayToString(this.transactionContext.getXid().getGlobalTransactionId()),
 							ByteUtils.byteArrayToString(current.getIdentifier().getGlobalTransactionId()));
 				} else if (StringUtils.isNotBlank(invocation.getConfirmableKey())) {
+					//如果设置了comfirm方法，调用
 					container.confirm(invocation);
 				} else {
 					current.setConfirmed(true);

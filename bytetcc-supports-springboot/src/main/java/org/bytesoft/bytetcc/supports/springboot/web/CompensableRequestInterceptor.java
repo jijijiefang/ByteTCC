@@ -48,6 +48,9 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.HttpClientErrorException;
 
+/**
+ * TCC事务远程请求拦截器
+ */
 public class CompensableRequestInterceptor
 		implements ClientHttpRequestInterceptor, CompensableEndpointAware, ApplicationContextAware {
 	static final Logger logger = LoggerFactory.getLogger(CompensableRequestInterceptor.class);
@@ -100,7 +103,7 @@ public class CompensableRequestInterceptor
 		}
 
 	}
-
+	//发送请求前操作
 	private void invokeBeforeSendRequest(HttpRequest httpRequest) throws IOException {
 		RemoteCoordinatorRegistry registry = RemoteCoordinatorRegistry.getInstance();
 		SpringBootBeanRegistry beanRegistry = SpringBootBeanRegistry.getInstance();

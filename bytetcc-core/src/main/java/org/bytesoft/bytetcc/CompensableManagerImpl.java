@@ -51,7 +51,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 补偿事务管理器
+ * TCC全局事务管理器实现类
  */
 public class CompensableManagerImpl implements CompensableManager, CompensableBeanFactoryAware, CompensableEndpointAware {
 	static final Logger logger = LoggerFactory.getLogger(CompensableManagerImpl.class);
@@ -90,10 +90,18 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 		return transaction;
 	}
 
+	/**
+	 * 当前线程关联一个事务
+	 * @param transaction
+	 */
 	public void attachThread(Transaction transaction) {
 		this.thread2txMap.put(Thread.currentThread(), (CompensableTransaction) transaction);
 	}
 
+	/**
+	 * 删除当前线程关联的事务
+	 * @return
+	 */
 	public Transaction detachThread() {
 		return this.thread2txMap.remove(Thread.currentThread());
 	}
@@ -133,6 +141,13 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 		return (CompensableTransaction) this.thread2txMap.get(thread);
 	}
 
+	/**
+	 * 恢复事务
+	 * @param tobj
+	 * @throws InvalidTransactionException
+	 * @throws IllegalStateException
+	 * @throws SystemException
+	 */
 	public void resume(javax.transaction.Transaction tobj)
 			throws InvalidTransactionException, IllegalStateException, SystemException {
 		if (Transaction.class.isInstance(tobj)) {
@@ -152,6 +167,11 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 		}
 	}
 
+	/**
+	 * 挂起事务
+	 * @return Transaction
+	 * @throws SystemException
+	 */
 	public Transaction suspend() throws SystemException {
 		CompensableTransaction compensable = (CompensableTransaction) this.thread2txMap.get(Thread.currentThread());
 		if (compensable == null) {
@@ -170,6 +190,11 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 		return transaction;
 	}
 
+	/**
+	 * 开启事务
+	 * @throws NotSupportedException
+	 * @throws SystemException
+	 */
 	public void begin() throws NotSupportedException, SystemException {
 		XidFactory transactionXidFactory = this.beanFactory.getTransactionXidFactory();
 
@@ -203,6 +228,7 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 		TransactionXid compensableXid = compensableContext.getXid();
 		TransactionXid transactionXid = transactionContext.getXid();
 		try {
+			//分支事务参与者获取或创建事务
 			Transaction transaction = transactionCoordinator.start(transactionContext, XAResource.TMNOFLAGS);
 			transaction.setTransactionalExtra(compensable);
 			compensable.setTransactionalExtra(transaction);
@@ -430,6 +456,16 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 		}
 	}
 
+	/**
+	 * 提交分支事务-会调用代理对象的confirm方法
+	 * @param transaction
+	 * @throws RollbackException
+	 * @throws HeuristicMixedException
+	 * @throws HeuristicRollbackException
+	 * @throws SecurityException
+	 * @throws IllegalStateException
+	 * @throws SystemException
+	 */
 	public void fireCompensableCommit(CompensableTransaction transaction) throws RollbackException, HeuristicMixedException,
 			HeuristicRollbackException, SecurityException, IllegalStateException, SystemException {
 		try {
@@ -505,6 +541,15 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 		}
 	}
 
+	/**
+	 * 分布式事务提交
+	 * @throws RollbackException
+	 * @throws HeuristicMixedException
+	 * @throws HeuristicRollbackException
+	 * @throws SecurityException
+	 * @throws IllegalStateException
+	 * @throws SystemException
+	 */
 	public void compensableCommit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException,
 			SecurityException, IllegalStateException, SystemException {
 		CompensableTransaction transaction = this.getCompensableTransactionQuietly();
@@ -546,6 +591,16 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 
 	}
 
+	/**
+	 * 提交分支事务-会调用代理对象的confirm方法
+	 * @param compensable
+	 * @throws RollbackException
+	 * @throws HeuristicMixedException
+	 * @throws HeuristicRollbackException
+	 * @throws SecurityException
+	 * @throws IllegalStateException
+	 * @throws SystemException
+	 */
 	protected void invokeCompensableCommit(CompensableTransaction compensable) throws RollbackException,
 			HeuristicMixedException, HeuristicRollbackException, SecurityException, IllegalStateException, SystemException {
 

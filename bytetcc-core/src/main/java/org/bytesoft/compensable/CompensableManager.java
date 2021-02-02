@@ -24,6 +24,9 @@ import javax.transaction.SystemException;
 import org.bytesoft.transaction.Transaction;
 import org.bytesoft.transaction.TransactionManager;
 
+/**
+ * TCC全局事务管理器
+ */
 public interface CompensableManager extends TransactionManager {
 
 	public CompensableTransaction getCompensableTransaction(Thread thread);
@@ -39,7 +42,7 @@ public interface CompensableManager extends TransactionManager {
 	public Transaction detachThread();
 
 	public void compensableBegin() throws NotSupportedException, SystemException;
-
+	//分布式事务提交
 	public void compensableCommit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException,
 			SecurityException, IllegalStateException, SystemException;
 
