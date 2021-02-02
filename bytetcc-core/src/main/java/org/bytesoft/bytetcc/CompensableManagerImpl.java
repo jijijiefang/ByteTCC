@@ -218,6 +218,13 @@ public class CompensableManagerImpl implements CompensableManager, CompensableBe
 		this.invokeBegin(transactionContext, false);
 	}
 
+	/**
+	 * 分支事务开启
+	 * @param transactionContext 事务上下文
+	 * @param createFlag 创建者标识
+	 * @throws NotSupportedException
+	 * @throws SystemException
+	 */
 	protected void invokeBegin(TransactionContext transactionContext, boolean createFlag)
 			throws NotSupportedException, SystemException {
 		TransactionParticipant transactionCoordinator = this.beanFactory.getTransactionNativeParticipant();

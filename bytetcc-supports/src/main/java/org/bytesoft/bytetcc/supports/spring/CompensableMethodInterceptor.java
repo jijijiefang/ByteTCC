@@ -47,6 +47,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Compensable注解拦截器
+ */
 @org.aspectj.lang.annotation.Aspect
 public class CompensableMethodInterceptor
 		implements MethodInterceptor, CompensableSynchronization, ApplicationContextAware, CompensableBeanFactoryAware {
@@ -84,10 +87,18 @@ public class CompensableMethodInterceptor
 	// <!-- <aop:pointcut id="compensableMethodPointcut" expression="@within(org.bytesoft.compensable.Compensable)" /> -->
 	// <!-- <aop:advisor advice-ref="compensableMethodInterceptor" pointcut-ref="compensableMethodPointcut" /> -->
 	// <!-- </aop:config> -->
+
+	/**
+	 * 拦截器环绕方法
+	 * @param pjp
+	 * @return
+	 * @throws Throwable
+	 */
 	@org.aspectj.lang.annotation.Around("@within(org.bytesoft.compensable.Compensable)")
 	public Object invoke(final ProceedingJoinPoint pjp) throws Throwable {
 		CompensableManager compensableManager = this.beanFactory.getCompensableManager();
 		CompensableTransaction compensable = compensableManager.getCompensableTransactionQuietly();
+		//TCC事务不为空且事务上下文不为空且已经提交或回滚，则直接执行方法
 		if (compensable != null && compensable.getTransactionContext() != null
 				&& compensable.getTransactionContext().isCompensating()) {
 			return pjp.proceed();
@@ -168,7 +179,7 @@ public class CompensableMethodInterceptor
 				logger.warn("Compensable-service {} is participanting in a non-TCC transaction which was created at:", method,
 						transaction.getCreatedAt());
 			}
-
+			//Transactional注解不为空且开启TCC分布式事务,当前Compensable注解的类加入TCC分布式事务
 			if (transactional != null && compensable != null && transaction != null) {
 				Propagation propagation = transactional == null ? null : transactional.propagation();
 				if (propagation == null) {

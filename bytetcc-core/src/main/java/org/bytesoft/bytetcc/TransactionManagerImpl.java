@@ -36,7 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 事务管理器
+ * 事务管理器实现类
  */
 public class TransactionManagerImpl implements TransactionManager, CompensableBeanFactoryAware {
 	static final Logger logger = LoggerFactory.getLogger(TransactionManagerImpl.class);

@@ -79,7 +79,7 @@ public class CompensableRequestInterceptor
 		} else if (compensable.getTransactionContext().isCompensable() == false) {
 			return execution.execute(httpRequest, body);
 		}
-
+		//使用CompensableLoadBalancerInterceptor作为负载均衡拦截器
 		beanRegistry.setLoadBalancerInterceptor(new CompensableLoadBalancerInterceptor(this.statefully) {
 			public void afterCompletion(Server server) {
 				if (server == null) {
@@ -90,7 +90,7 @@ public class CompensableRequestInterceptor
 
 				try {
 					String instanceId = this.getInstanceId(server);
-
+					//发送前操作
 					invokeBeforeSendRequest(httpRequest, instanceId);
 				} catch (IOException ex) {
 					throw new RuntimeException(ex);
@@ -118,6 +118,12 @@ public class CompensableRequestInterceptor
 
 	}
 
+	/**
+	 * 发送Http请求前额外操作
+	 * @param httpRequest
+	 * @param identifier
+	 * @throws IOException
+	 */
 	private void invokeBeforeSendRequest(HttpRequest httpRequest, String identifier) throws IOException {
 		SpringCloudBeanRegistry beanRegistry = SpringCloudBeanRegistry.getInstance();
 		CompensableBeanFactory beanFactory = beanRegistry.getBeanFactory();

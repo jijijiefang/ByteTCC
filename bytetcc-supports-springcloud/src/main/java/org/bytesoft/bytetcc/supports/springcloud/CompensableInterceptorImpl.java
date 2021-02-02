@@ -25,7 +25,7 @@ import org.bytesoft.transaction.supports.rpc.TransactionRequest;
 import org.bytesoft.transaction.supports.rpc.TransactionResponse;
 
 /**
- *
+ * springcloud事务拦截器使用的是rpc的事务拦截器实现
  */
 public class CompensableInterceptorImpl implements TransactionInterceptor, CompensableBeanFactoryAware {
 	@javax.inject.Inject

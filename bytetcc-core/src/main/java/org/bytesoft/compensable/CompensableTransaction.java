@@ -20,7 +20,9 @@ import org.bytesoft.compensable.archive.TransactionArchive;
 import org.bytesoft.transaction.Transaction;
 import org.bytesoft.transaction.supports.TransactionListener;
 import org.bytesoft.transaction.supports.TransactionResourceListener;
-
+/**
+ * 可补偿的TCC分布式事务接口定义
+ */
 public interface CompensableTransaction
 		extends Transaction, CompensableContext, TransactionListener, TransactionResourceListener {
 

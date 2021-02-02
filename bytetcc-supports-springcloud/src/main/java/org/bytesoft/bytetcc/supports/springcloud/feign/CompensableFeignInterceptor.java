@@ -31,6 +31,9 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+/**
+ *
+ */
 public class CompensableFeignInterceptor
 		implements feign.RequestInterceptor, CompensableEndpointAware, ApplicationContextAware {
 	static final String HEADER_TRANCACTION_KEY = "X-BYTETCC-TRANSACTION"; // org.bytesoft.bytetcc.transaction

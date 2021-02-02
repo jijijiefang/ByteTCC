@@ -835,7 +835,7 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter
 		Transaction transaction = (Transaction) this.getTransactionalExtra();
 		org.bytesoft.transaction.TransactionContext transactionContext = transaction.getTransactionContext();
 		TransactionXid transactionXid = transactionContext.getXid();
-
+		//已经加入
 		invocation.setEnlisted(true);
 
 		CompensableArchive compensableArchive = new CompensableArchive();

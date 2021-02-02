@@ -46,6 +46,9 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * TCC事务发起者不做处理，事务参与者处理事务
+ */
 public class CompensableHandlerInterceptor implements HandlerInterceptor, CompensableEndpointAware, ApplicationContextAware {
 	static final Logger logger = LoggerFactory.getLogger(CompensableHandlerInterceptor.class);
 
@@ -58,6 +61,8 @@ public class CompensableHandlerInterceptor implements HandlerInterceptor, Compen
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		String transactionStr = request.getHeader(HEADER_TRANCACTION_KEY);
+		//如果request header中不存在X-BYTETCC-TRANSACTION，说明是TCC事务开启者；
+		//否则说明是已经存在TCC事务，当前是事务参与者
 		if (StringUtils.isBlank(transactionStr)) {
 			return true;
 		}
@@ -86,6 +91,7 @@ public class CompensableHandlerInterceptor implements HandlerInterceptor, Compen
 		Transactional methodTransactional = method.getAnnotation(Transactional.class);
 		boolean transactionalDefined = globalTransactional != null || methodTransactional != null;
 		Compensable annotation = clazz.getAnnotation(Compensable.class);
+		//存在Transactional注解，且不存在Compensable注解
 		if (transactionalDefined && annotation == null) {
 			logger.warn("Invalid transaction definition(uri={}, handler= {})!", request.getRequestURI(), handler,
 					new IllegalStateException());

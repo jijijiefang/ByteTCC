@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import org.bytesoft.compensable.CompensableInvocation;
 
 /**
- * 分布式事务操作
+ * 解析Compensable注解得到的对象
  */
 public class CompensableInvocationImpl implements CompensableInvocation {
 

@@ -22,7 +22,7 @@ import org.bytesoft.bytejta.supports.jdbc.LocalXACompatible;
  */
 public class TransactionContext extends org.bytesoft.transaction.TransactionContext implements LocalXACompatible {
 	private static final long serialVersionUID = 1L;
-
+	//事务提交或回滚操作后设置为true
 	private transient boolean compensating;
 	private transient int propagationLevel;
 
