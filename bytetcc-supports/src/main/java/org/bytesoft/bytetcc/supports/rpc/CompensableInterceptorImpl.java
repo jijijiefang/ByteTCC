@@ -94,6 +94,11 @@ public class CompensableInterceptorImpl implements TransactionInterceptor, Compe
 		}
 	}
 
+	/**
+	 * TCC事务参与者接收到请求
+	 * @param request
+	 * @throws IllegalStateException
+	 */
 	public void afterReceiveRequest(TransactionRequest request) throws IllegalStateException {
 		TransactionContext srcTransactionContext = request.getTransactionContext();
 		if (srcTransactionContext == null) {
@@ -104,6 +109,7 @@ public class CompensableInterceptorImpl implements TransactionInterceptor, Compe
 		TransactionContext transactionContext = srcTransactionContext.clone();
 		transactionContext.setPropagatedBy(srcTransactionContext.getPropagatedBy());
 		try {
+			//TCC事务参与者开启分支事务
 			compensableCoordinator.start(transactionContext, XAResource.TMNOFLAGS);
 		} catch (XAException ex) {
 			logger.error("CompensableInterceptorImpl.afterReceiveRequest({})", request, ex);
