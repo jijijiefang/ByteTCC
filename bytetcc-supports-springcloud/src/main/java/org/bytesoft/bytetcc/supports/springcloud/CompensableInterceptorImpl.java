@@ -30,7 +30,7 @@ import org.bytesoft.transaction.supports.rpc.TransactionResponse;
 public class CompensableInterceptorImpl implements TransactionInterceptor, CompensableBeanFactoryAware {
 	@javax.inject.Inject
 	private CompensableBeanFactory beanFactory;
-
+	//使用org.bytesoft.bytetcc.supports.rpc.CompensableInterceptorImpl
 	private TransactionInterceptor compensableInterceptor;
 
 	public void beforeSendRequest(TransactionRequest request) throws IllegalStateException {

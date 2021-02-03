@@ -716,6 +716,14 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter
 
 	}
 
+	/**
+	 * 登记远程分支事务
+	 * @param xaRes
+	 * @return
+	 * @throws RollbackException
+	 * @throws IllegalStateException
+	 * @throws SystemException
+	 */
 	public boolean enlistResource(XAResource xaRes) throws RollbackException, IllegalStateException, SystemException {
 		if (this.transactionStatus == Status.STATUS_MARKED_ROLLBACK) {
 			throw new RollbackException();
@@ -740,6 +748,7 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter
 		TransactionXid globalXid = this.transactionContext.getXid();
 		TransactionXid branchXid = xidFactory.createBranchXid(globalXid);
 		try {
+			//开启远程分支事务
 			descriptor.start(branchXid, XAResource.TMNOFLAGS);
 		} catch (XAException ex) {
 			throw new RollbackException(); // should never happen
@@ -747,6 +756,7 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter
 
 		RemoteSvc remoteSvc = descriptor.getRemoteSvc();
 		XAResourceArchive resourceArchive = this.resourceMap.get(remoteSvc);
+		//第一次发起远程分支事务-记录事务日志
 		if (resourceArchive == null) {
 			resourceArchive = new XAResourceArchive();
 			resourceArchive.setXid(branchXid);
@@ -775,6 +785,14 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter
 		}
 	}
 
+	/**
+	 * 删除远程分支资源
+	 * @param xaRes
+	 * @param flag
+	 * @return
+	 * @throws IllegalStateException
+	 * @throws SystemException
+	 */
 	public boolean delistResource(XAResource xaRes, int flag) throws IllegalStateException, SystemException {
 		CompensableLogger compensableLogger = this.beanFactory.getCompensableLogger();
 
@@ -786,7 +804,7 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter
 				logger.debug("Endpoint {} can not be its own remote branch!", descriptor.getIdentifier());
 				return true;
 			}
-
+			//失败
 			if (flag == XAResource.TMFAIL) {
 				RemoteSvc remoteSvc = descriptor.getRemoteSvc();
 

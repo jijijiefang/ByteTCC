@@ -21,6 +21,9 @@ import com.netflix.client.IClientConfigAware;
 import com.netflix.loadbalancer.ILoadBalancer;
 import com.netflix.loadbalancer.Server;
 
+/**
+ * TCC事务实现的负载均衡算法
+ */
 public interface CompensableRule extends IClientConfigAware {
 
 	public Server chooseServer(Object key, List<Server> serverList);

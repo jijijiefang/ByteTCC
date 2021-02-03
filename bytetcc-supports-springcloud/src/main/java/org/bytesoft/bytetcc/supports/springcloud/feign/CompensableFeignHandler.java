@@ -50,6 +50,7 @@ public class CompensableFeignHandler implements InvocationHandler {
 		final SpringCloudBeanRegistry beanRegistry = SpringCloudBeanRegistry.getInstance();
 		CompensableBeanFactory beanFactory = beanRegistry.getBeanFactory();
 		CompensableManager compensableManager = beanFactory.getCompensableManager();
+		//使用的是org.bytesoft.bytetcc.supports.rpc.CompensableInterceptorImpl
 		final TransactionInterceptor transactionInterceptor = beanFactory.getTransactionInterceptor();
 
 		final CompensableTransactionImpl compensable = //
@@ -67,6 +68,7 @@ public class CompensableFeignHandler implements InvocationHandler {
 		final TransactionResponseImpl response = new TransactionResponseImpl();
 
 		beanRegistry.setLoadBalancerInterceptor(new CompensableLoadBalancerInterceptor(this.statefully) {
+			//实现拦截器后处理方法逻辑用于CompensableLoadBalancerRuleImpl#choose()方法调用，chooseServer()后处理
 			public void afterCompletion(Server server) {
 				beanRegistry.removeLoadBalancerInterceptor();
 

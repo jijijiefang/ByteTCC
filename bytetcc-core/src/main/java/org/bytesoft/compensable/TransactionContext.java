@@ -25,7 +25,9 @@ public class TransactionContext extends org.bytesoft.transaction.TransactionCont
 	//事务提交或回滚操作后设置为true
 	private transient boolean compensating;
 	private transient int propagationLevel;
-
+	/**
+	 * 开启TCC分布式事务以后设置为true
+	 */
 	private boolean compensable;
 	private boolean statefully;
 
@@ -59,6 +61,10 @@ public class TransactionContext extends org.bytesoft.transaction.TransactionCont
 		this.compensating = compensating;
 	}
 
+	/**
+	 * 是否已经开启TCC分布式事务
+	 * @return boolean
+	 */
 	public boolean isCompensable() {
 		return compensable;
 	}

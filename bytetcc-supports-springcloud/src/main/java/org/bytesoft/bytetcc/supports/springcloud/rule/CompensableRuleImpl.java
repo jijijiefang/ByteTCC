@@ -22,6 +22,9 @@ import com.netflix.client.config.IClientConfig;
 import com.netflix.loadbalancer.ILoadBalancer;
 import com.netflix.loadbalancer.Server;
 
+/**
+ * TCC事务实现的负载均衡算法实现类
+ */
 public class CompensableRuleImpl implements CompensableRule {
 	static final Random RANDOM = new Random();
 	private IClientConfig clientConfig;

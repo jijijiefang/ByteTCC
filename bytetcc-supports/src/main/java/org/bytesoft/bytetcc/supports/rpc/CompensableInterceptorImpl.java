@@ -49,7 +49,7 @@ public class CompensableInterceptorImpl implements TransactionInterceptor, Compe
 	private CompensableBeanFactory beanFactory;
 
 	/**
-	 * 发送请求前操作
+	 * 发送请求前操作-登记远程分支事务
 	 * @param request
 	 * @throws IllegalStateException
 	 */
@@ -78,7 +78,7 @@ public class CompensableInterceptorImpl implements TransactionInterceptor, Compe
 			RemoteResourceDescriptor descriptor = new RemoteResourceDescriptor();
 			descriptor.setDelegate(resource);
 			descriptor.setIdentifier(resource.getIdentifier());
-			//
+			//登记远程分支事务
 			boolean participantEnlisted = transaction.enlistResource(descriptor);
 			((TransactionRequestImpl) request).setParticipantEnlistFlag(participantEnlisted);
 		} catch (IllegalStateException ex) {
