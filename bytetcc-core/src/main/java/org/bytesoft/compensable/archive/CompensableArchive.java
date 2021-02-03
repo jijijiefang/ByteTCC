@@ -31,6 +31,7 @@ public class CompensableArchive {
 	/* try-phase. */
 	private String transactionResourceKey;
 	private Xid transactionXid;
+	//是否调用try方法执行成功
 	private boolean tried;
 
 	/* confirm/cancel phase. */

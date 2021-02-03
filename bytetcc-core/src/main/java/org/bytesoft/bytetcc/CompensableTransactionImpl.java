@@ -105,6 +105,10 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter
 		this.transactionContext = txContext;
 	}
 
+	/**
+	 * 事务存档
+	 * @return
+	 */
 	public TransactionArchive getTransactionArchive() {
 		TransactionArchive transactionArchive = new TransactionArchive();
 		transactionArchive.setVariables(this.variables);
@@ -261,7 +265,7 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter
 	}
 
 	/**
-	 * 分支事务提交操作-调用comfirm方法
+	 * 分支事务提交操作-调用本地comfirm方法，反射调用
 	 * @throws SystemException
 	 */
 	private void fireNativeParticipantConfirm() throws SystemException {
@@ -310,13 +314,20 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter
 
 	}
 
+	/**
+	 * 分支事务提交操作-提交远程comfirm方法
+	 * @throws HeuristicMixedException
+	 * @throws HeuristicRollbackException
+	 * @throws CommitRequiredException
+	 * @throws SystemException
+	 */
 	private void fireRemoteParticipantConfirm()
 			throws HeuristicMixedException, HeuristicRollbackException, CommitRequiredException, SystemException {
 		boolean committedExists = false;
 		boolean rolledbackExists = false;
 		boolean unFinishExists = false;
 		boolean errorExists = false;
-
+		//循环遍历远程资源
 		for (int i = 0; i < this.resourceList.size(); i++) {
 			XAResourceArchive current = this.resourceList.get(i);
 			if (current.isCommitted()) {
@@ -562,6 +573,10 @@ public class CompensableTransactionImpl extends TransactionListenerAdapter
 		this.fireRollback();
 	}
 
+	/**
+	 * TCC分支事务回滚
+	 * @throws SystemException
+	 */
 	private void fireNativeParticipantCancel() throws SystemException {
 		boolean errorExists = false;
 
